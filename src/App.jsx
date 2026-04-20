@@ -1,7 +1,9 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';  // ← AGREGAR ESTA LÍNEA
 
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
