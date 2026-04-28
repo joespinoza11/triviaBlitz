@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-import React, {useState} from "react";
-import {Container, Row, Col, Form, Alert} from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Col, Form, Alert } from "react-bootstrap";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import {useAuth} from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import LoginModal from "../components/LoginModal";
 
-const Home=() =>{
+const Home = () => {
   const { user } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(!user);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -23,25 +22,21 @@ const Home=() =>{
   ];
 
   const difficulties = [
-    {id: "facil", label: "⭐ Fácil", value: "easy"},
-    {id: "medio", label: "⭐⭐ Medio", value: "medium"},
-    {id: "dificil", label: "⭐⭐⭐ Difícil", value: "hard"},
+    { id: "facil", label: "⭐ Fácil", value: "easy" },
+    { id: "medio", label: "⭐⭐ Medio", value: "medium" },
+    { id: "dificil", label: "⭐⭐⭐ Difícil", value: "hard" },
   ];
 
-  const handleStartQuiz = () =>{
+  const handleStartQuiz = () => {
     setError("");
-
-    if (!selectedCategory){
+    if (!selectedCategory) {
       setError("Por favor selecciona una categoría");
       return;
     }
-
-    if (!selectedDifficulty){
+    if (!selectedDifficulty) {
       setError("Por favor selecciona una dificultad");
       return;
     }
-
-    // Aquí irá la navegación al quiz
     console.log("Iniciando quiz:", { selectedCategory, selectedDifficulty });
   };
 
@@ -54,11 +49,11 @@ const Home=() =>{
 
       <Container className="py-5">
         <Row className="mb-5">
-          <Col lg={8} className="mx-auto">
-            <Card title="Bienvenido a Trivia Blitz" className="mb-4">
-              <p className="text-center text-muted mb-0">
-                Pon a prueba tus conocimientos eligiendo una categoría y
-                dificultad
+          <Col lg={8} className="mx-auto text-center">
+            <h1 className="mb-3">🎮 ¡Bienvenido a Trivia Blitz!</h1>
+            <Card title="Comenzar Desafío" className="mb-4">
+              <p className="text-muted mb-0">
+                Pon a prueba tus conocimientos eligiendo una categoría y dificultad
               </p>
             </Card>
           </Col>
@@ -78,8 +73,7 @@ const Home=() =>{
           <Row className="mb-4">
             <Col lg={8} className="mx-auto">
               <Alert variant="info">
-                ¡Hola <strong>{user.username}</strong>! Estoy listo para el
-                desafío.
+                ¡Hola <strong>{user.username}</strong>! ¿Listo para jugar?
               </Alert>
             </Col>
           </Row>
@@ -87,16 +81,12 @@ const Home=() =>{
 
         <Row className="mb-5">
           <Col lg={8} className="mx-auto">
-            <Card title="Selecciona una Categoría">
+            <Card title="1. Selecciona una Categoría">
               <Row className="g-3">
                 {categories.map((category) => (
                   <Col xs={6} md={4} key={category.id}>
                     <Button
-                      variant={
-                        selectedCategory === category.id
-                          ? "primary"
-                          : "outline-primary"
-                      }
+                      variant={selectedCategory === category.id ? "primary" : "outline-primary"}
                       className="w-100 py-3"
                       onClick={() => setSelectedCategory(category.id)}
                     >
@@ -113,18 +103,17 @@ const Home=() =>{
 
         <Row className="mb-5">
           <Col lg={8} className="mx-auto">
-            <Card title="Selecciona la Dificultad">
+            <Card title="2. Selecciona la Dificultad">
               <Form.Group>
-                {difficulties.map((difficulty) => (
+                {difficulties.map((diff) => (
                   <Form.Check
-                    key={difficulty.id}
+                    key={diff.id}
                     type="radio"
-                    id={difficulty.id}
-                    label={difficulty.label}
+                    id={diff.id}
+                    label={diff.label}
                     name="difficulty"
-                    value={difficulty.value}
-                    checked={selectedDifficulty === difficulty.id}
-                    onChange={() => setSelectedDifficulty(difficulty.id)}
+                    checked={selectedDifficulty === diff.id}
+                    onChange={() => setSelectedDifficulty(diff.id)}
                     className="mb-2"
                   />
                 ))}
@@ -136,19 +125,10 @@ const Home=() =>{
         <Row>
           <Col lg={8} className="mx-auto">
             <div className="d-grid gap-2">
-              <Button
-                variant="success"
-                size="lg"
-                onClick={handleStartQuiz}
-                disabled={!user}
-              >
+              <Button variant="success" size="lg" onClick={handleStartQuiz} disabled={!user}>
                 🚀 Comenzar Quiz
               </Button>
-              {!user && (
-                <p className="text-center text-muted mt-2">
-                  Necesitas iniciar sesión para comenzar
-                </p>
-              )}
+              {!user && <p className="text-center text-muted mt-2">Inicia sesión para jugar</p>}
             </div>
           </Col>
         </Row>
@@ -158,58 +138,3 @@ const Home=() =>{
 };
 
 export default Home;
-=======
-import React, { useContext } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { AuthContext } from "../context/AuthContext";
-
-export default function Home() {
-  const { user } = useContext(AuthContext);
-
-  return (
-    <Container className="py-5">
-      <Row className="mb-5">
-        <Col lg={8} className="mx-auto text-center">
-          <h1 className="mb-3">🎮 ¡Bienvenido a Trivia Blitz!</h1>
-          {user && (
-            <p className="lead">
-              Hola <strong>{user.username}</strong>, ¿listo para el desafío?
-            </p>
-          )}
-        </Col>
-      </Row>
-
-      <Row className="g-4">
-        <Col md={6}>
-          <Card className="h-100 shadow-sm">
-            <Card.Body className="text-center">
-              <h5 className="card-title">🏆 Jugar Trivia</h5>
-              <p className="card-text">
-                Responde preguntas y acumula puntos. ¡Forma combos para
-                puntuación bonificada!
-              </p>
-              <Button variant="warning" href="#juego">
-                Comenzar Juego
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={6}>
-          <Card className="h-100 shadow-sm">
-            <Card.Body className="text-center">
-              <h5 className="card-title">📊 Mis Resultados</h5>
-              <p className="card-text">
-                Consulta tu historial de juegos, puntuaciones y estadísticas.
-              </p>
-              <Button variant="info" href="/resultados">
-                Ver Resultados
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
-}
->>>>>>> Reynold
