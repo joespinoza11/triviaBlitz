@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import LoginModal from "../components/LoginModal";
-
+ 
 const Home = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(!user);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [error, setError] = useState("");
-
+ 
   const categories = [
     { id: "ciencia", label: "🔬 Ciencia", icon: "🔬" },
     { id: "historia", label: "📚 Historia", icon: "📚" },
@@ -20,13 +22,13 @@ const Home = () => {
     { id: "geografia", label: "🌍 Geografía", icon: "🌍" },
     { id: "musica", label: "🎵 Música", icon: "🎵" },
   ];
-
+ 
   const difficulties = [
     { id: "facil", label: "⭐ Fácil", value: "easy" },
     { id: "medio", label: "⭐⭐ Medio", value: "medium" },
     { id: "dificil", label: "⭐⭐⭐ Difícil", value: "hard" },
   ];
-
+ 
   const handleStartQuiz = () => {
     setError("");
     if (!selectedCategory) {
@@ -37,16 +39,21 @@ const Home = () => {
       setError("Por favor selecciona una dificultad");
       return;
     }
-    console.log("Iniciando quiz:", { selectedCategory, selectedDifficulty });
+    navigate("/juego", {
+      state: {
+        categoria: selectedCategory,
+        dificultad: selectedDifficulty,
+      },
+    });
   };
-
+ 
   return (
     <>
       <LoginModal
         show={showLoginModal}
         onHide={() => setShowLoginModal(false)}
       />
-
+ 
       <Container className="py-5">
         <Row className="mb-5">
           <Col lg={8} className="mx-auto text-center">
@@ -58,7 +65,7 @@ const Home = () => {
             </Card>
           </Col>
         </Row>
-
+ 
         {error && (
           <Row className="mb-4">
             <Col lg={8} className="mx-auto">
@@ -68,7 +75,7 @@ const Home = () => {
             </Col>
           </Row>
         )}
-
+ 
         {user && (
           <Row className="mb-4">
             <Col lg={8} className="mx-auto">
@@ -78,7 +85,7 @@ const Home = () => {
             </Col>
           </Row>
         )}
-
+ 
         <Row className="mb-5">
           <Col lg={8} className="mx-auto">
             <Card title="1. Selecciona una Categoría">
@@ -100,7 +107,7 @@ const Home = () => {
             </Card>
           </Col>
         </Row>
-
+ 
         <Row className="mb-5">
           <Col lg={8} className="mx-auto">
             <Card title="2. Selecciona la Dificultad">
@@ -121,14 +128,16 @@ const Home = () => {
             </Card>
           </Col>
         </Row>
-
+ 
         <Row>
           <Col lg={8} className="mx-auto">
             <div className="d-grid gap-2">
               <Button variant="success" size="lg" onClick={handleStartQuiz} disabled={!user}>
                 🚀 Comenzar Quiz
               </Button>
-              {!user && <p className="text-center text-muted mt-2">Inicia sesión para jugar</p>}
+              {!user && (
+                <p className="text-center text-muted mt-2">Inicia sesión para jugar</p>
+              )}
             </div>
           </Col>
         </Row>
@@ -136,5 +145,5 @@ const Home = () => {
     </>
   );
 };
-
+ 
 export default Home;

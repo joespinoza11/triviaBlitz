@@ -1,21 +1,25 @@
+const cache = new Map();
+ 
 export const traducirTexto = async (texto) => {
-    try {
-        const response = await fetch("https://libretranslate.com/translate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                q: texto,
-                source: "en",
-                target: "es",
-                format: "text"
-            })
-        });
-        if (!response.ok) throw new Error("Error al traducir");
-
-        const data = await response.json();
-        return data.translatedText;
-    } catch (error) {
-        console.error("Error en translateService:", error);
-        return texto;
-    }
+  if (!texto) return texto;
+  if (cache.has(texto)) return cache.get(texto);
+ 
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(texto)}`;
+    const response = await fetch(url);
+ 
+    if (!response.ok) throw new Error("Error al traducir");
+ 
+    const data = await response.json();
+ 
+    // La respuesta es un array anidado; el texto traducido está en data[0]
+    const traducido = data[0]?.map(chunk => chunk[0]).join("") || texto;
+ 
+    cache.set(texto, traducido);
+    return traducido;
+  } catch (error) {
+    console.error("Error en translateService:", error);
+    return texto;
+  }
 };
+ 
