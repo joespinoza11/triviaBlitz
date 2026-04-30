@@ -18,7 +18,6 @@ const Juego = () => {
   const { user }  = useAuth();
   const juegoCtx  = useContext(JuegoContext);
 
-  // Redirect si no hay usuario
   useEffect(() => {
     if (!user) navigate("/");
   }, [user, navigate]);
@@ -48,7 +47,7 @@ const Juego = () => {
     }
   }, [juegoCtx?.juegoTerminado]);
 
-  // ─── Estado de carga ─────────────────────────────────────
+
   if (!juegoCtx || juegoCtx.cargando) {
     return (
       <Container className="py-5 text-center">
@@ -58,7 +57,6 @@ const Juego = () => {
     );
   }
 
-  // ─── Error ───────────────────────────────────────────────
   if (juegoCtx.error) {
     return (
       <Container className="py-5">
@@ -115,14 +113,12 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Timer ── */}
       <Row className="mb-3">
         <Col lg={8} className="mx-auto">
           <Timer tiempoRestante={tiempoRestante} tiempoTotal={tiempoTotal} />
         </Col>
       </Row>
 
-      {/* ── Pregunta ── */}
       <Row className="mb-4">
         <Col lg={8} className="mx-auto">
           <PreguntaCard
@@ -133,7 +129,6 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Opciones ── */}
       <Row className="mb-4">
         <Col lg={8} className="mx-auto">
           <OpcionesGrid
@@ -146,7 +141,6 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Feedback ── */}
       {respuestaSeleccionada && respuestaSeleccionada !== "__tiempo_agotado__" && (
         <Row className="mb-3">
           <Col lg={8} className="mx-auto">
@@ -172,7 +166,6 @@ const Juego = () => {
         </Row>
       )}
 
-      {/* ── Progreso ── */}
       <Row>
         <Col lg={8} className="mx-auto">
           <div style={styles.progressDots}>
