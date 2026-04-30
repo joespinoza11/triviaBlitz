@@ -20,5 +20,6 @@ export const traducirTexto = async (texto) => {
     console.error("Error en translateService:", error);
     return texto;
   }
+
 };
  

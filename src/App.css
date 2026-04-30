@@ -1,4 +1,154 @@
-/* src/App.css */
+/* ============================================================
+   App.css — Trivia Blitz
+   Sistema de temas con CSS variables
+   ============================================================ */
+
+/* ---------- VARIABLES por defecto (tema claro) ---------- */
+:root {
+  --tb-bg: #f8f9fa;
+  --tb-surface: #ffffff;
+  --tb-surface2: #f1f3f5;
+  --tb-text: #212529;
+  --tb-text-muted: #6c757d;
+  --tb-border: #dee2e6;
+  --tb-primary: #0d6efd;
+  --tb-primary-hover: #0b5ed7;
+  --tb-accent: #0d6efd;
+  --tb-card-bg: #ffffff;
+  --tb-card-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --tb-navbar-bg: #ffffff;
+  --tb-footer-bg: #212529;
+  --tb-footer-text: #ffffff;
+  --tb-input-bg: #ffffff;
+  --tb-input-border: #ced4da;
+  --tb-badge-bg: #0d6efd;
+  --tb-correct: #198754;
+  --tb-incorrect: #dc3545;
+  --tb-timer-track: #dee2e6;
+}
+
+/* ---------- APLICACIÓN DEL TEMA al body ---------- */
+body {
+  background-color: var(--tb-bg) !important;
+  color: var(--tb-text) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  background-color: var(--tb-navbar-bg) !important;
+  border-bottom: 1px solid var(--tb-border) !important;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-brand,
+.nav-link {
+  color: var(--tb-text) !important;
+}
+
+/* ---------- Cards / Panels ---------- */
+.card,
+.card-body {
+  background-color: var(--tb-card-bg) !important;
+  border-color: var(--tb-border) !important;
+  color: var(--tb-text) !important;
+  box-shadow: var(--tb-card-shadow) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ---------- bg-light override ---------- */
+.bg-light {
+  background-color: var(--tb-bg) !important;
+}
+
+/* ---------- Inputs y Forms ---------- */
+.form-control,
+.form-select {
+  background-color: var(--tb-input-bg) !important;
+  border-color: var(--tb-input-border) !important;
+  color: var(--tb-text) !important;
+}
+
+.form-control::placeholder {
+  color: var(--tb-text-muted) !important;
+}
+
+/* ---------- Modals ---------- */
+.modal-content {
+  background-color: var(--tb-surface) !important;
+  border-color: var(--tb-border) !important;
+  color: var(--tb-text) !important;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--tb-border) !important;
+}
+
+/* ---------- List Groups ---------- */
+.list-group-item {
+  background-color: var(--tb-surface) !important;
+  border-color: var(--tb-border) !important;
+  color: var(--tb-text) !important;
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+  border-color: var(--tb-border) !important;
+}
+
+/* ---------- Footer ---------- */
+footer.bg-dark {
+  background-color: var(--tb-footer-bg) !important;
+  color: var(--tb-footer-text) !important;
+}
+
+footer p {
+  color: var(--tb-footer-text) !important;
+}
+
+/* ---------- Text helpers ---------- */
+.text-muted {
+  color: var(--tb-text-muted) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--tb-text);
+}
+
+/* ---------- Botones primarios ---------- */
+.btn-primary {
+  background-color: var(--tb-primary) !important;
+  border-color: var(--tb-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--tb-primary-hover) !important;
+  border-color: var(--tb-primary-hover) !important;
+}
+
+/* ---------- HUD del juego ---------- */
+[data-tema="tema_oscuro"] .border,
+[data-tema="tema_neon"] .border {
+  border-color: var(--tb-border) !important;
+}
+
+/* ---------- Animación de transición de tema ---------- */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+}
+
+/* ---------- Tema Neón — efecto glow especial ---------- */
+[data-tema="tema_neon"] .btn-primary,
+[data-tema="tema_neon"] .btn-warning {
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+}
+
+[data-tema="tema_neon"] .card {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2) !important;
+}
+
+/* ---------- Estilos legacy (no eliminar) ---------- */
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -12,188 +162,4 @@
 
 .counter:hover {
   border-color: var(--accent-border);
-}
-
-.counter:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.hero {
-  position: relative;
-}
-
-.hero .base,
-.hero .framework,
-.hero .vite {
-  margin: 0 auto;
-}
-
-.hero .base {
-  width: 170px;
-  position: relative;
-  z-index: 0;
-}
-
-.hero .framework,
-.hero .vite {
-  position: absolute;
-}
-
-.hero .framework {
-  z-index: 1;
-  top: 34px;
-  height: 28px;
-  transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
-}
-
-.hero .vite {
-  z-index: 0;
-  top: 107px;
-  height: 26px;
-  width: auto;
-  transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
-}
-
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-}
-
-@media (max-width: 1024px) {
-  #center {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
-}
-
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-}
-
-#next-steps > div {
-  flex: 1 1 0;
-  padding: 32px;
-}
-
-@media (max-width: 1024px) {
-  #next-steps > div {
-    padding: 24px 20px;
-  }
-}
-
-#next-steps .icon {
-  margin-bottom: 16px;
-  width: 22px;
-  height: 22px;
-}
-
-@media (max-width: 1024px) {
-  #next-steps {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-}
-
-@media (max-width: 1024px) {
-  #docs {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-}
-
-#next-steps ul .logo {
-  height: 18px;
-}
-
-#next-steps ul a {
-  color: var(--text-h);
-  font-size: 16px;
-  border-radius: 6px;
-  background: var(--social-bg);
-  display: flex;
-  padding: 6px 12px;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: box-shadow 0.3s;
-}
-
-#next-steps ul a:hover {
-  box-shadow: var(--shadow);
-}
-
-#next-steps ul a .button-icon {
-  height: 18px;
-  width: 18px;
-}
-
-@media (max-width: 1024px) {
-  #next-steps ul {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  #next-steps ul li {
-    flex: 1 1 calc(50% - 8px);
-  }
-
-  #next-steps ul a {
-    width: 100%;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 1024px) {
-  #spacer {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
-  width: 100%;
-}
-
-.ticks::before,
-.ticks::after {
-  content: '';
-  position: absolute;
-  top: -4.5px;
-  border: 5px solid transparent;
-}
-
-.ticks::before {
-  left: 0;
-  border-left-color: var(--border);
-}
-
-.ticks::after {
-  right: 0;
-  border-right-color: var(--border);
 }

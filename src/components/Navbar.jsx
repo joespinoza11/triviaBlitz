@@ -50,6 +50,7 @@ const Navbar = ({ onLoginClick }) => {
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item href="/">Inicio</Dropdown.Item>
+                    <Dropdown.Item href="/tienda">Tienda</Dropdown.Item>
                     <Dropdown.Item href="/resultados">Resultados</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item

@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-/**
- * PreguntaCard — muestra la pregunta actual
- *
- * Props:
- *   pregunta  (string)  — texto de la pregunta
- *   categoria (string)  — categoría de la pregunta
- *   numeroPregunta (number) — número de pregunta actual
- */
-
 const CATEGORY_ICONS = {
   ciencia: "🔬",
   historia: "📚",
@@ -31,14 +22,14 @@ const PreguntaCard = ({ pregunta = "Cargando pregunta...", categoria = "", numer
 
   const styles = {
     card: {
-      background: "#fff",
+      background: "var(--tb-card-bg, #ffffff)",
       borderRadius: "16px",
       padding: "1.5rem",
-      boxShadow: "0 4px 20px rgba(13,110,253,0.1), 0 1px 4px rgba(0,0,0,0.06)",
-      border: "1px solid #e2e8f0",
+      boxShadow: "var(--tb-card-shadow, 0 4px 20px rgba(13,110,253,0.1))",
+      border: "1px solid var(--tb-border, #e2e8f0)",
       opacity: visible ? 1 : 0,
       transform: visible ? "translateY(0)" : "translateY(10px)",
-      transition: "opacity 0.3s ease, transform 0.3s ease",
+      transition: "opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease",
       minHeight: "120px",
       display: "flex",
       flexDirection: "column",
@@ -48,8 +39,8 @@ const PreguntaCard = ({ pregunta = "Cargando pregunta...", categoria = "", numer
       display: "inline-flex",
       alignItems: "center",
       gap: "5px",
-      background: "#f0f4ff",
-      color: "#0d6efd",
+      background: "var(--tb-surface2, #f0f4ff)",
+      color: "var(--tb-primary, #0d6efd)",
       fontSize: "0.72rem",
       fontWeight: 700,
       padding: "3px 10px",
@@ -60,7 +51,7 @@ const PreguntaCard = ({ pregunta = "Cargando pregunta...", categoria = "", numer
       width: "fit-content",
     },
     questionNumber: {
-      color: "#adb5bd",
+      color: "var(--tb-text-muted, #adb5bd)",
       fontSize: "0.75rem",
       fontWeight: 600,
       marginBottom: "4px",
@@ -69,7 +60,7 @@ const PreguntaCard = ({ pregunta = "Cargando pregunta...", categoria = "", numer
     questionText: {
       fontSize: "1.15rem",
       fontWeight: 700,
-      color: "#1a202c",
+      color: "var(--tb-text, #1a202c)",
       lineHeight: 1.5,
       margin: 0,
     },

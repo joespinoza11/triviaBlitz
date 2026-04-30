@@ -57,7 +57,7 @@ const Home = () => {
       <Container className="py-5">
         <Row className="mb-5">
           <Col lg={8} className="mx-auto text-center">
-            <h1 className="mb-3">🎮 ¡Bienvenido a Trivia Blitz!</h1>
+            <h1 className="mb-3">¡Bienvenido a Trivia Blitz!</h1>
             <Card title="Comenzar Desafío" className="mb-4">
               <p className="text-muted mb-0">
                 Pon a prueba tus conocimientos eligiendo una categoría y dificultad

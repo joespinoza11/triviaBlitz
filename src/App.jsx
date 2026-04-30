@@ -41,7 +41,7 @@ function App() {
               </main>
               <footer className="bg-dark text-white text-center py-3 mt-5">
                 <Container>
-                  <p className="mb-0">© 2026 Trivia Blitz - Todos los derechos reservados</p>
+                  <p className="mb-0">Trivia Blitz</p>
                 </Container>
               </footer>
             </div>
