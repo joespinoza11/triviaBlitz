@@ -33,6 +33,7 @@ const Juego = () => {
       juegoCtx.iniciarJuego({ categoria, dificultad });
     }
   }, []);
+  
 
   useEffect(() => {
     setOpciones5050(null);
@@ -206,7 +207,6 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* Feedback */}
       {respuestaSeleccionada && respuestaSeleccionada !== "__tiempo_agotado__" && respuestaSeleccionada !== "__saltar__" && (
         <Row className="mb-3">
           <Col lg={8} className="mx-auto">
