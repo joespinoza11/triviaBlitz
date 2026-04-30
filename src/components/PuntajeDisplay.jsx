@@ -1,13 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-/**
- * PuntajeDisplay — marcador de puntos animado
- *
- * Props:
- *   puntos          (number) — puntaje actual
- *   numeroPregunta  (number) — pregunta actual (1-based)
- *   totalPreguntas  (number) — total de preguntas
- */
 const PuntajeDisplay = ({ puntos = 0, numeroPregunta = 1, totalPreguntas = 10 }) => {
   const [displayPuntos, setDisplayPuntos] = useState(puntos);
   const [delta, setDelta] = useState(null);

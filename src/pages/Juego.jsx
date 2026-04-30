@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 
 import { JuegoContext } from "../context/JuegoContext";
+import { useRecompensas } from "../context/RecompensasContext";
 import { useAuth } from "../hooks/useAuth";
 
 import Timer from "../components/Timer";
@@ -13,12 +14,14 @@ import PuntajeDisplay from "../components/PuntajeDisplay";
 import Button from "../components/Button";
 
 const Juego = () => {
-  const navigate  = useNavigate();
-  const location  = useLocation();
-  const { user }  = useAuth();
-  const juegoCtx  = useContext(JuegoContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  const juegoCtx = useContext(JuegoContext);
+  const { inventario, usarPowerUp } = useRecompensas();
 
-  // Redirect si no hay usuario
+  const [opciones5050, setOpciones5050] = useState(null);
+
   useEffect(() => {
     if (!user) navigate("/");
   }, [user, navigate]);
@@ -29,7 +32,11 @@ const Juego = () => {
     if (categoria && dificultad) {
       juegoCtx.iniciarJuego({ categoria, dificultad });
     }
-  }, []); 
+  }, []);
+
+  useEffect(() => {
+    setOpciones5050(null);
+  }, [juegoCtx?.numeroPregunta]);
 
   useEffect(() => {
     if (juegoCtx?.juegoTerminado) {
@@ -48,7 +55,6 @@ const Juego = () => {
     }
   }, [juegoCtx?.juegoTerminado]);
 
-  // ─── Estado de carga ─────────────────────────────────────
   if (!juegoCtx || juegoCtx.cargando) {
     return (
       <Container className="py-5 text-center">
@@ -58,7 +64,6 @@ const Juego = () => {
     );
   }
 
-  // ─── Error ───────────────────────────────────────────────
   if (juegoCtx.error) {
     return (
       <Container className="py-5">
@@ -91,9 +96,32 @@ const Juego = () => {
     responderPregunta = () => {},
   } = juegoCtx;
 
+  const usar5050 = () => {
+    if (!usarPowerUp("cincuenta")) return;
+    const incorrectas = opciones.filter(o => o.id !== respuestaCorrecta);
+    const unaIncorrecta = incorrectas[Math.floor(Math.random() * incorrectas.length)];
+    const mezcladas = [
+      { id: respuestaCorrecta, texto: respuestaCorrecta },
+      unaIncorrecta,
+    ].sort(() => Math.random() - 0.5);
+    setOpciones5050(mezcladas);
+  };
+
+  const usarSaltar = () => {
+    if (!usarPowerUp("saltar")) return;
+    responderPregunta("__saltar__");
+  };
+
+  const usarTiempo = () => {
+    if (!usarPowerUp("tiempo")) return;
+    if (juegoCtx.agregarTiempo) juegoCtx.agregarTiempo(10);
+  };
+
+  const opcionesAMostrar = opciones5050 || opciones;
+
   return (
     <Container className="py-4">
-      {/* ── HUD superior ── */}
+      {/* HUD superior */}
       <Row className="mb-3">
         <Col lg={8} className="mx-auto">
           <div style={styles.hud}>
@@ -115,14 +143,46 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Timer ── */}
+      {/* Timer */}
       <Row className="mb-3">
         <Col lg={8} className="mx-auto">
           <Timer tiempoRestante={tiempoRestante} tiempoTotal={tiempoTotal} />
         </Col>
       </Row>
 
-      {/* ── Pregunta ── */}
+      {/* Power-Ups */}
+      <Row className="mb-3">
+        <Col lg={8} className="mx-auto">
+          <div className="d-flex gap-2 justify-content-center">
+            <Button
+              variant="outline-warning"
+              size="sm"
+              onClick={usar5050}
+              disabled={!inventario?.cincuenta || inventario.cincuenta <= 0 || !!respuestaSeleccionada || !!opciones5050}
+            >
+              ⚡ 50/50 ({inventario?.cincuenta || 0})
+            </Button>
+            <Button
+              variant="outline-info"
+              size="sm"
+              onClick={usarTiempo}
+              disabled={!inventario?.tiempo || inventario.tiempo <= 0}
+            >
+              ⏰ +10s ({inventario?.tiempo || 0})
+            </Button>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={usarSaltar}
+              disabled={!inventario?.saltar || inventario.saltar <= 0 || !!respuestaSeleccionada}
+            >
+              ⏭ Saltar ({inventario?.saltar || 0})
+            </Button>
+          </div>
+        </Col>
+      </Row>
+
+      {/* Pregunta */}
       <Row className="mb-4">
         <Col lg={8} className="mx-auto">
           <PreguntaCard
@@ -133,11 +193,11 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Opciones ── */}
+      {/* Opciones */}
       <Row className="mb-4">
         <Col lg={8} className="mx-auto">
           <OpcionesGrid
-            opciones={opciones}
+            opciones={opcionesAMostrar}
             respuestaSeleccionada={respuestaSeleccionada}
             respuestaCorrecta={respuestaCorrecta}
             onResponder={responderPregunta}
@@ -146,8 +206,8 @@ const Juego = () => {
         </Col>
       </Row>
 
-      {/* ── Feedback ── */}
-      {respuestaSeleccionada && respuestaSeleccionada !== "__tiempo_agotado__" && (
+      {/* Feedback */}
+      {respuestaSeleccionada && respuestaSeleccionada !== "__tiempo_agotado__" && respuestaSeleccionada !== "__saltar__" && (
         <Row className="mb-3">
           <Col lg={8} className="mx-auto">
             <Alert
@@ -157,6 +217,16 @@ const Juego = () => {
               {respuestaSeleccionada === respuestaCorrecta
                 ? `✅ ¡Correcto! ${combo >= 2 ? `Combo ×${combo} 🔥` : ""}`
                 : "❌ Incorrecto. ¡Sigue intentando!"}
+            </Alert>
+          </Col>
+        </Row>
+      )}
+
+      {respuestaSeleccionada === "__saltar__" && (
+        <Row className="mb-3">
+          <Col lg={8} className="mx-auto">
+            <Alert variant="info" style={{ textAlign: "center", fontWeight: 600, borderRadius: "12px" }}>
+              ⏭ Pregunta saltada
             </Alert>
           </Col>
         </Row>
@@ -172,7 +242,7 @@ const Juego = () => {
         </Row>
       )}
 
-      {/* ── Progreso ── */}
+      {/* Progreso */}
       <Row>
         <Col lg={8} className="mx-auto">
           <div style={styles.progressDots}>

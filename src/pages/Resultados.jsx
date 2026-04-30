@@ -107,7 +107,7 @@ const Resultados = () => {
       <Row>
         <Col lg={8} className="mx-auto">
           <div className="d-grid gap-2">
-            <Button variant="primary" href="/">🏠 Volver al Inicio</Button>
+            <Button variant="primary" href="/">Volver al Inicio</Button>
           </div>
         </Col>
       </Row>

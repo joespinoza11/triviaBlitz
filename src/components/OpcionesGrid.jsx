@@ -1,16 +1,5 @@
 import React, { useState } from "react";
 
-/**
- * OpcionesGrid — grilla 2×2 de opciones de respuesta
- *
- * Props:
- *   opciones               ([{ id, texto }])      — lista de 4 opciones
- *   respuestaSeleccionada  (string | null)         — id de la opción elegida
- *   respuestaCorrecta      (string | null)         — id de la opción correcta
- *   onResponder            (id: string) => void    — callback al seleccionar
- *   deshabilitado          (boolean)               — bloquea interacción
- */
-
 const LETRAS = ["A", "B", "C", "D"];
 
 const OpcionesGrid = ({

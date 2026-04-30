@@ -4,7 +4,12 @@ import { traducirTexto } from "../services/translateService";
 
 export const JuegoContext = createContext();
 
-const TIEMPO_POR_PREGUNTA = 30;
+const TIEMPOS_DIFICULTAD = {
+  facil: 30,
+  medio: 15,
+  dificil: 10,
+};
+
 const PUNTOS_BASE = 100;
 
 const CATEGORIA_MAP = {
@@ -28,9 +33,11 @@ function mezclar(arr) {
 
 export function JuegoProvider({ children }) {
   const [configuracion, setConfiguracion] = useState({ categoria: "", dificultad: "" });
+  
+  const [tiempoMaximo, setTiempoMaximo] = useState(30); 
 
   const [preguntas, setPreguntas] = useState([]);
-  const [indice, setIndice] = useState(0); // 0-based
+  const [indice, setIndice] = useState(0);
   const [opcionesActuales, setOpcionesActuales] = useState([]);
 
   const [cargando, setCargando] = useState(false);
@@ -44,7 +51,8 @@ export function JuegoProvider({ children }) {
   const [respuestaCorrecta, setRespuestaCorrecta] = useState(null);
   const [juegoTerminado, setJuegoTerminado] = useState(false);
 
-  const [tiempoRestante, setTiempoRestante] = useState(TIEMPO_POR_PREGUNTA);
+  // 3. Inicializamos el tiempo restante con el valor por defecto
+  const [tiempoRestante, setTiempoRestante] = useState(30);
   const timerRef = useRef(null);
   const avanzarRef = useRef(null);
 
@@ -68,8 +76,8 @@ export function JuegoProvider({ children }) {
     setOpcionesActuales(mezcladas.map((t) => ({ id: t, texto: t })));
     setRespuestaCorrecta(correcta);
     setRespuestaSeleccionada(null);
-    setTiempoRestante(TIEMPO_POR_PREGUNTA);
-  }, [indice, preguntas]);
+    setTiempoRestante(tiempoMaximo); 
+  }, [indice, preguntas, tiempoMaximo]);
 
   avanzarRef.current = () => {
     setIndice((prev) => {
@@ -132,6 +140,12 @@ export function JuegoProvider({ children }) {
 
   const iniciarJuego = useCallback(async ({ categoria, dificultad }) => {
     clearInterval(timerRef.current);
+    
+    // 5. Establecer el tiempo máximo según la dificultad al iniciar[cite: 6]
+    const tiempoConfigurado = TIEMPOS_DIFICULTAD[dificultad] || 30;
+    setTiempoMaximo(tiempoConfigurado);
+    setTiempoRestante(tiempoConfigurado);
+
     setCargando(true);
     setError(null);
     setJuegoTerminado(false);
@@ -190,7 +204,8 @@ export function JuegoProvider({ children }) {
         combo,
         comboMaximo,
         tiempoRestante,
-        tiempoTotal: TIEMPO_POR_PREGUNTA,
+        // 6. Pasamos el tiempo dinámico a través del Provider[cite: 6]
+        tiempoTotal: tiempoMaximo, 
         numeroPregunta,
         totalPreguntas,
         respuestaSeleccionada,
@@ -202,11 +217,9 @@ export function JuegoProvider({ children }) {
         reiniciarJuego,
         iniciarJuego,
         agregarTiempo, 
-
         respuestasCorrectas,
         categoria: configuracion.categoria,
         dificultad: configuracion.dificultad,
-
         configuracion,
         setConfiguracion,
         setPreguntaActual: setIndice,

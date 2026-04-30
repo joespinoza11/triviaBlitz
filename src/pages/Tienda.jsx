@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import { useRecompensas } from "../context/RecompensasContext";
 
 export default function Tienda() {
-    const { monedas, inventario, desbloqueados, TIENDA, comprar, temaActivo, activarTema } = useRecompensas();
+    const { monedas, inventario, desbloqueados, TIENDA, comprar, temaActivo, activarTema, avatarActivo, activarAvatar } = useRecompensas();
     const [mensaje, setMensaje] = useState(null);
 
     const handleComprar = (itemId) => {
@@ -17,6 +17,12 @@ export default function Tienda() {
     const handleActivarTema = (itemId) => {
         activarTema(itemId);
         setMensaje({ ok: true, mensaje: `¡Tema activado!` });
+        setTimeout(() => setMensaje(null), 2000);
+    };
+
+    const handleActivarAvatar = (itemId) => {
+        activarAvatar(itemId);
+        setMensaje({ ok: true, mensaje: `¡Avatar activado!` });
         setTimeout(() => setMensaje(null), 2000);
     };
 
@@ -147,23 +153,62 @@ export default function Tienda() {
             <Row className="mb-4">
                 <Col lg={10} className="mx-auto">
                     <Card title="🧑 Avatares">
+                        <p style={{ color: "var(--tb-text-muted, #6c757d)", fontSize: "0.9rem" }} className="mb-3">
+                            Elige tu avatar para que aparezca en el navbar. Puedes cambiar entre avatares desbloqueados en cualquier momento.
+                        </p>
                         <Row className="g-3">
+                            {/* Avatar por defecto */}
+                            <Col xs={12} sm={6} md={4}>
+                                <div style={{
+                                    ...cardStyle,
+                                    border: avatarActivo === "default"
+                                        ? "2px solid #0d6efd"
+                                        : "1px solid var(--tb-border, #dee2e6)",
+                                }}>
+                                    <div style={{ fontSize: "2.5rem" }}>👤</div>
+                                    <h6 className="mt-2 mb-1" style={{ color: "var(--tb-text, #212529)" }}>Avatar Predeterminado</h6>
+                                    <small style={{ color: "var(--tb-text-muted, #6c757d)" }} className="d-block mb-2">El avatar por defecto</small>
+                                    {avatarActivo === "default" ? (
+                                        <Badge bg="primary">✓ Activo</Badge>
+                                    ) : (
+                                        <Button variant="outline-primary" size="sm" onClick={() => handleActivarAvatar("default")}>
+                                            Activar
+                                        </Button>
+                                    )}
+                                </div>
+                            </Col>
+
                             {avatares.map(item => {
                                 const comprado = desbloqueados.includes(item.id);
+                                const activo = avatarActivo === item.id;
                                 return (
                                     <Col xs={12} sm={6} md={4} key={item.id}>
-                                        <div style={cardStyle}>
+                                        <div style={{
+                                            ...cardStyle,
+                                            border: activo
+                                                ? "2px solid #0d6efd"
+                                                : "1px solid var(--tb-border, #dee2e6)",
+                                        }}>
                                             <div style={{ fontSize: "2.5rem" }}>{item.icono}</div>
                                             <h6 className="mt-2 mb-1" style={{ color: "var(--tb-text, #212529)" }}>{item.nombre}</h6>
                                             <small style={{ color: "var(--tb-text-muted, #6c757d)" }} className="d-block mb-2">{item.descripcion}</small>
-                                            <Button
-                                                variant={comprado ? "success" : "warning"}
-                                                size="sm"
-                                                onClick={() => !comprado && handleComprar(item.id)}
-                                                disabled={comprado || monedas < item.precio}
-                                            >
-                                                {comprado ? "✅ Desbloqueado" : `🪙 ${item.precio}`}
-                                            </Button>
+
+                                            {activo ? (
+                                                <Badge bg="primary">✓ Activo</Badge>
+                                            ) : comprado ? (
+                                                <Button variant="outline-success" size="sm" onClick={() => handleActivarAvatar(item.id)}>
+                                                    Activar
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="warning"
+                                                    size="sm"
+                                                    onClick={() => handleComprar(item.id)}
+                                                    disabled={monedas < item.precio}
+                                                >
+                                                    🪙 {item.precio}
+                                                </Button>
+                                            )}
                                         </div>
                                     </Col>
                                 );

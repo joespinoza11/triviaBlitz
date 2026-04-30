@@ -32,7 +32,7 @@ const TEMAS_CSS = {
         "--tb-accent": "#0d6efd",
         "--tb-card-bg": "#ffffff",
         "--tb-card-shadow": "0 2px 12px rgba(0,0,0,0.07)",
-        "--tb-navbar-bg": "#ffffff",
+        "--tb-navbar-bg": "#0b5ed7",
         "--tb-footer-bg": "#212529",
         "--tb-footer-text": "#ffffff",
         "--tb-input-bg": "#ffffff",
@@ -111,6 +111,7 @@ const TEMAS_CSS = {
 };
  
 const TEMA_KEY = "triviaTema";
+const AVATAR_KEY = "triviaAvatar";
  
 function aplicarTema(temaId) {
     const vars = TEMAS_CSS[temaId] || TEMAS_CSS.default;
@@ -139,6 +140,10 @@ export function RecompensasProvider({ children }) {
     const [temaActivo, setTemaActivo] = useState(() => {
         return localStorage.getItem(TEMA_KEY) || "default";
     });
+
+    const [avatarActivo, setAvatarActivo] = useState(() => {
+        return localStorage.getItem(AVATAR_KEY) || "default";
+    });
  
     useEffect(() => {
         aplicarTema(temaActivo);
@@ -166,6 +171,11 @@ export function RecompensasProvider({ children }) {
         localStorage.setItem(TEMA_KEY, temaId);
         aplicarTema(temaId);
     }, []);
+
+    const activarAvatar = useCallback((avatarId) => {
+        setAvatarActivo(avatarId);
+        localStorage.setItem(AVATAR_KEY, avatarId);
+    }, []);
  
     const comprar = useCallback((itemId) => {
         const item = TIENDA.find(i => i.id === itemId);
@@ -176,6 +186,10 @@ export function RecompensasProvider({ children }) {
             if (item.tipo === "estilo") {
                 activarTema(itemId);
                 return { ok: true, mensaje: `¡Tema "${item.nombre}" activado!` };
+            }
+            if (item.tipo === "avatar") {
+                activarAvatar(itemId);
+                return { ok: true, mensaje: `¡Avatar "${item.nombre}" activado!` };
             }
             return { ok: false, mensaje: "Ya lo tienes" };
         }
@@ -198,13 +212,12 @@ export function RecompensasProvider({ children }) {
                 localStorage.setItem("triviaDesbloqueados", JSON.stringify(nuevo));
                 return nuevo;
             });
-            if (item.tipo === "estilo") {
-                activarTema(itemId);
-            }
+            if (item.tipo === "estilo") activarTema(itemId);
+            if (item.tipo === "avatar") activarAvatar(itemId);
         }
  
         return { ok: true, mensaje: `¡Compraste ${item.nombre}!` };
-    }, [monedas, desbloqueados, activarTema]);
+    }, [monedas, desbloqueados, activarTema, activarAvatar]);
  
     const usarPowerUp = useCallback((tipo) => {
         if (!inventario[tipo] || inventario[tipo] <= 0) return false;
@@ -222,6 +235,7 @@ export function RecompensasProvider({ children }) {
             TIENDA, agregarMonedas, calcularMonedas,
             comprar, usarPowerUp,
             temaActivo, activarTema,
+            avatarActivo, activarAvatar,
         }}>
             {children}
         </RecompensasContext.Provider>
