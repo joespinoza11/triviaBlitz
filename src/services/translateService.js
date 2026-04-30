@@ -12,7 +12,6 @@ export const traducirTexto = async (texto) => {
  
     const data = await response.json();
  
-    // La respuesta es un array anidado; el texto traducido está en data[0]
     const traducido = data[0]?.map(chunk => chunk[0]).join("") || texto;
  
     cache.set(texto, traducido);

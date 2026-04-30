@@ -1,22 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, ProgressBar, ListGroup } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
+import { useRecompensas } from "../context/RecompensasContext";
 
 const Resultados = () => {
-  const { user }    = useAuth();
-  const location    = useLocation();
+  const { user } = useAuth();
+  const location = useLocation();
+  const { agregarMonedas, calcularMonedas, monedas } = useRecompensas();
+  const [monedasGanadas, setMonedasGanadas] = useState(0);
 
   const results = location?.state?.results || {
     correctAnswers: 0,
     totalQuestions: 10,
-    category:       "N/A",
-    difficulty:     "N/A",
-    puntosFinal:    0,
-    comboMaximo:    1,
+    category:    "N/A",
+    difficulty:  "N/A",
+    puntosFinal: 0,
+    comboMaximo: 1,
   };
+
+  useEffect(() => {
+    const ganadas = calcularMonedas(
+      results.comboMaximo,
+      results.correctAnswers,
+      results.totalQuestions
+    );
+    agregarMonedas(ganadas);
+    setMonedasGanadas(ganadas);
+  }, []);
 
   const percentage = results.totalQuestions > 0
     ? Math.round((results.correctAnswers / results.totalQuestions) * 100)
@@ -51,6 +64,14 @@ const Resultados = () => {
             />
             <p className="lead">{results.correctAnswers} de {results.totalQuestions} correctas</p>
             <p className="text-muted">{getMensaje()}</p>
+
+            <div className="mt-3 p-3 rounded" style={{ background: "rgba(255,193,7,0.15)" }}>
+              <h5 className="text-warning">🪙 +{monedasGanadas} monedas ganadas</h5>
+              <p className="text-muted mb-2">Total acumulado: {monedas} monedas</p>
+              <Button variant="warning" href="/tienda" size="sm">
+                Ir a la Tienda 🏪
+              </Button>
+            </div>
           </Card>
         </Col>
       </Row>
